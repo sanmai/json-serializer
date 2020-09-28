@@ -89,11 +89,12 @@ final class Serializer implements SerializerInterface
     }
 
     /**
-     * @template T
-     * @psalm-param class-string<T> $type
-     * @psalm-return T
+     * @psalm-template T
+     * @psalm-param class-string<T>|class-string<ItemList> $type
+     * @psalm-return T|ItemList
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
+     *
      * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
@@ -106,17 +107,16 @@ final class Serializer implements SerializerInterface
     }
 
     /**
-     * @template T
+     * @param class-string<ItemList> $type
      *
-     * @param class-string<ItemList<T>> $type
-     *
-     * @return ItemList<T>
+     * @return ItemList
      */
     private function deserializeListType(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
-        /** @var string $arrayType */
+        /** @var class-string $arrayType */
         $arrayType = \sprintf('array<%s>', $type::getListType());
 
+        /** @var array<object> $list */
         $list = $this->serializer->deserialize($data, $arrayType, $format, $context);
 
         return $type::withList($list);

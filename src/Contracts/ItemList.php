@@ -35,12 +35,12 @@ namespace JSONSerializer\Contracts;
 interface ItemList
 {
     /**
-     * @return class-string<T>
+     * @return class-string
      */
     public static function getListType(): string;
 
     /**
-     * @param array<T> $list
+     * @param array<object> $list
      *
      * @return static
      */
