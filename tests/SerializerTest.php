@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 namespace Tests\JSONSerializer;
 
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
+use JMS\Serializer\SerializerBuilder;
 use JSONSerializer\Serializer;
 use PHPUnit\Framework\TestCase;
 use Tests\JSONSerializer\Fixtures\ItemExample;
@@ -85,5 +88,28 @@ class SerializerTest extends TestCase
 
         $this->assertSame('bar', $itemList->items[1]->name);
         $this->assertSame(2, $itemList->items[1]->number);
+    }
+
+    public function test_it_can_take_custom_builder_with_custom_strategy()
+    {
+        $builder = SerializerBuilder::create();
+        $builder->setPropertyNamingStrategy(
+            new class() implements PropertyNamingStrategyInterface {
+                public function translateName(PropertyMetadata $property): string
+                {
+                    if ($property->name === 'name') {
+                        return 'bar';
+                    }
+
+                    return $property->name;
+                }
+            }
+        );
+
+        $serializer = new Serializer($builder);
+        $example = $serializer->deserialize('{"bar": "foo"}', ItemExample::class);
+
+        /** @var $example ItemExample */
+        $this->assertSame('foo', $example->name);
     }
 }

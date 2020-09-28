@@ -27,10 +27,7 @@ declare(strict_types=1);
 
 namespace JSONSerializer;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
-use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
@@ -40,46 +37,18 @@ final class Serializer implements SerializerInterface
 {
     private const SERIALIZATION_JSON = 'json';
 
-    private static $addGlobalIgnoredAnnotations = true;
-
     /** @var SerializerInterface */
     private $serializer;
 
-    public function __construct(?string $cacheDirectory = null)
+    public function __construct(?SerializerBuilder $builder = null)
     {
-        $builder = SerializerBuilder::create();
+        $builder = $builder ?? SerializerBuilder::create();
 
-        $builder->setPropertyNamingStrategy(
-            new SerializedNameAnnotationStrategy(
-                new IdenticalPropertyNamingStrategy()
-            )
-        );
-
-        /**
-         * @see https://jmsyst.com/libs/serializer/master/configuration#configuring-a-cache-directory
-         */
-        if ($cacheDirectory !== null) {
-            $builder->setCacheDir($cacheDirectory);
-        }
-
-        /** @psalm-suppress MixedAssignment */
         $this->serializer = $builder->build();
-
-        // @codeCoverageIgnoreStart
-        if (self::$addGlobalIgnoredAnnotations) {
-            // Ignore Phan/Psalm issue-suppressing annotations
-            AnnotationReader::addGlobalIgnoredName('phan');
-            AnnotationReader::addGlobalIgnoredName('psalm');
-            AnnotationReader::addGlobalIgnoredName('template');
-            // But do that just once
-            self::$addGlobalIgnoredAnnotations = false;
-        }
-        // @codeCoverageIgnoreEnd
     }
 
     /**
      * @see \JMS\Serializer\SerializerInterface::serialize()
-     * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @param mixed $data
      */
@@ -94,8 +63,6 @@ final class Serializer implements SerializerInterface
      * @psalm-return T|ItemList
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {

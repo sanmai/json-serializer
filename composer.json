@@ -13,9 +13,7 @@
     ],
     "require": {
         "php": "^7.3 || ^8.0",
-        "ext-SimpleXML": "*",
         "ext-json": "*",
-        "ext-libxml": "*",
         "doctrine/annotations": "^1.10.4",
         "jms/serializer": "^3.9"
     },
