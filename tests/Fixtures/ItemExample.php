@@ -51,4 +51,9 @@ final class ItemExample
      * @var int[]
      */
     public $numbers = [];
+
+    public function __construct(array $numbers = [])
+    {
+        $this->numbers = $numbers;
+    }
 }

@@ -31,6 +31,8 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
 
 final class Serializer implements SerializerInterface
@@ -45,6 +47,23 @@ final class Serializer implements SerializerInterface
         $builder = $builder ?? SerializerBuilder::create();
 
         $this->serializer = $builder->build();
+    }
+
+    /**
+     * Makes a serializer with a set of custom JSON flags, purely out of convenience.
+     *
+     * @param int $options Bitmask consisting of serialization-related JSON_* options like JSON_PRETTY_PRINT. Defaults to JSON_PRESERVE_ZERO_FRACTION.
+     */
+    public static function withJSONOptions(int $options = JSON_PRESERVE_ZERO_FRACTION): self
+    {
+        $visitorFactory = new JsonSerializationVisitorFactory();
+        $visitorFactory->setOptions($options);
+
+        $builder = SerializerBuilder::create();
+        $builder->setSerializationVisitor(self::SERIALIZATION_JSON, $visitorFactory);
+        $builder->setDeserializationVisitor(self::SERIALIZATION_JSON, new JsonDeserializationVisitorFactory());
+
+        return new Serializer($builder);
     }
 
     /**

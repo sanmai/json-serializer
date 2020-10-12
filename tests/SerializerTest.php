@@ -112,4 +112,22 @@ class SerializerTest extends TestCase
         /** @var $example ItemExample */
         $this->assertSame('foo', $example->name);
     }
+
+    public function test_it_can_serializer_with_flags()
+    {
+        $this->serializer = Serializer::withJSONOptions(JSON_PRETTY_PRINT);
+
+        $json = $this->serializer->serialize(new ItemExample([1]));
+
+        $this->assertSame('{
+    "numbers": [
+        1
+    ]
+}', $json);
+
+        $example = $this->serializer->deserialize($json, ItemExample::class);
+
+        /** @var $example ItemExample */
+        $this->assertSame([1], $example->numbers);
+    }
 }
