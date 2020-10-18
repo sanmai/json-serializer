@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['7.3', '7.4']
+        dependencies: ['']
+        include:
+          - { php-version: '7.3', dependencies: '--prefer-lowest' }
+          - { php-version: '8.0', dependencies: '--ignore-platform-req=php' }
+
+    continue-on-error: ${{ matrix.php-version == '8.0' }}
+    name: CI PHP ${{ matrix.php-version }} ${{ matrix.dependencies }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: pcov
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.*') }}
+          restore-keys: |
+            composer-${{ matrix.php-version }}-
+            composer-
+
+      - name: Install dependencies
+        run: |
+          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies }}
+
+      - name: Execute tests
+        run: |
+          php vendor/bin/phpunit
+
+      - name: Validate composer.json
+        run: |
+          composer validate --strict
+          composer normalize --diff --dry-run
