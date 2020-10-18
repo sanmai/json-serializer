@@ -31,12 +31,14 @@ use JMS\Serializer\Annotation as JMS;
 
 final class ItemExample
 {
+    public const ITEM_NAME_PROPERTY = 'itemName';
+
     /**
      * @JMS\Type("string")
      *
      * @var ?string
      */
-    public $name;
+    public $itemName;
 
     /**
      * @JMS\Type("int")

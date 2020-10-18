@@ -28,6 +28,8 @@ declare(strict_types=1);
 namespace JSONSerializer;
 
 use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
@@ -44,7 +46,7 @@ final class Serializer implements SerializerInterface
 
     public function __construct(?SerializerBuilder $builder = null)
     {
-        $builder = $builder ?? SerializerBuilder::create();
+        $builder = $builder ?? self::makeSerializerBuilder();
 
         $this->serializer = $builder->build();
     }
@@ -59,11 +61,25 @@ final class Serializer implements SerializerInterface
         $visitorFactory = new JsonSerializationVisitorFactory();
         $visitorFactory->setOptions($options);
 
-        $builder = SerializerBuilder::create();
+        $builder = self::makeSerializerBuilder();
         $builder->setSerializationVisitor(self::SERIALIZATION_JSON, $visitorFactory);
         $builder->setDeserializationVisitor(self::SERIALIZATION_JSON, new JsonDeserializationVisitorFactory());
 
         return new Serializer($builder);
+    }
+
+    private static function makeSerializerBuilder(): SerializerBuilder
+    {
+        $builder = SerializerBuilder::create();
+
+        // Required for properties cased as fooBarBaz.
+        $builder->setPropertyNamingStrategy(
+            new SerializedNameAnnotationStrategy(
+                new IdenticalPropertyNamingStrategy()
+            )
+        );
+
+        return $builder;
     }
 
     /**

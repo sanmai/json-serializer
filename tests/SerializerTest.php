@@ -58,35 +58,35 @@ class SerializerTest extends TestCase
         /** @var $example ItemExample */
         $this->assertNull($example->number);
 
-        $example = $this->serializer->deserialize('{"name": "foo", "number": 1, "numbers": [1, 2, 3]}', ItemExample::class);
+        $example = $this->serializer->deserialize('{"itemName": "foo", "number": 1, "numbers": [1, 2, 3]}', ItemExample::class);
 
         /** @var $example ItemExample */
-        $this->assertSame('foo', $example->name);
+        $this->assertSame('foo', $example->itemName);
         $this->assertSame(1, $example->number);
         $this->assertSame([1, 2, 3], $example->numbers);
     }
 
     public function test_it_respects_mixed_case_attributes()
     {
-        $example = $this->serializer->deserialize('{"NAME": "foo"}', ItemExample::class);
+        $example = $this->serializer->deserialize('{"itemNaMe": "foo"}', ItemExample::class);
 
         /** @var $example ItemExample */
-        $this->assertNull($example->name);
+        $this->assertNull($example->itemName);
     }
 
     public function test_it_can_deserialize_list_of_items()
     {
-        $itemList = $this->serializer->deserialize('[{"name": "foo", "number": 1, "numbers": [1, 2, 3]}, {"name": "bar", "number": 2}]', ItemListExample::class);
+        $itemList = $this->serializer->deserialize('[{"itemName": "foo", "number": 1, "numbers": [1, 2, 3]}, {"itemName": "bar", "number": 2}]', ItemListExample::class);
 
         $this->assertInstanceOf(ItemListExample::class, $itemList);
 
         $this->assertCount(2, $itemList->items);
 
-        $this->assertSame('foo', $itemList->items[0]->name);
+        $this->assertSame('foo', $itemList->items[0]->itemName);
         $this->assertSame(1, $itemList->items[0]->number);
         $this->assertSame([1, 2, 3], $itemList->items[0]->numbers);
 
-        $this->assertSame('bar', $itemList->items[1]->name);
+        $this->assertSame('bar', $itemList->items[1]->itemName);
         $this->assertSame(2, $itemList->items[1]->number);
     }
 
@@ -97,7 +97,7 @@ class SerializerTest extends TestCase
             new class() implements PropertyNamingStrategyInterface {
                 public function translateName(PropertyMetadata $property): string
                 {
-                    if ($property->name === 'name') {
+                    if ($property->name === ItemExample::ITEM_NAME_PROPERTY) {
                         return 'bar';
                     }
 
@@ -110,7 +110,7 @@ class SerializerTest extends TestCase
         $example = $serializer->deserialize('{"bar": "foo"}', ItemExample::class);
 
         /** @var $example ItemExample */
-        $this->assertSame('foo', $example->name);
+        $this->assertSame('foo', $example->itemName);
     }
 
     public function test_it_can_serializer_with_flags()
