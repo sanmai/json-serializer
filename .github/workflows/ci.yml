@@ -14,13 +14,11 @@ jobs:
     strategy:
       matrix:
         php-version: ['7.3', '7.4']
-        dependencies: ['']
+        composer-flags: ['']
         include:
-          - { php-version: '7.3', dependencies: '--prefer-lowest' }
-          - { php-version: '8.0', dependencies: '--ignore-platform-req=php' }
+          - { php-version: '8.0', composer-flags: '--ignore-platform-req=php' }
 
-    continue-on-error: ${{ matrix.php-version == '8.0' }}
-    name: CI PHP ${{ matrix.php-version }} ${{ matrix.dependencies }}
+    name: CI PHP ${{ matrix.php-version }} ${{ matrix.composer-flags }}
 
     steps:
       - name: Checkout code
@@ -33,7 +31,7 @@ jobs:
           coverage: pcov
           tools: composer:v2
 
-      - name: Cache dependencies
+      - name: Restore dependency cache
         uses: actions/cache@v2
         with:
           path: ~/.cache/composer
@@ -42,13 +40,20 @@ jobs:
             composer-${{ matrix.php-version }}-
             composer-
 
-      - name: Install dependencies
+      - name: Install composer-flags
         run: |
-          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies }}
+          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: Execute tests
         run: |
-          php vendor/bin/phpunit
+          make ci-test
+
+      - name: Upload coverage report
+        continue-on-error: true
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          php vendor/bin/php-coveralls -v
 
       - name: Validate composer.json
         run: |

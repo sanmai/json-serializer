@@ -20,12 +20,12 @@
     "conflict": {},
     "require-dev": {
         "ergebnis/composer-normalize": "^2.8",
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^2.16.4",
         "infection/infection": ">=0.10",
         "phan/phan": ">=1",
-        "php-coveralls/php-coveralls": "^2.1",
+        "php-coveralls/php-coveralls": "^2.4.1",
         "phpstan/phpstan": ">=0.10",
-        "phpunit/phpunit": "^9.3",
+        "phpunit/phpunit": "^9.4",
         "vimeo/psalm": ">=3.0.16"
     },
     "config": {
