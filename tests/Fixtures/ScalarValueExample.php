@@ -29,9 +29,6 @@ namespace Tests\JSONSerializer\Fixtures;
 
 use JSONSerializer\Contracts\ScalarValue;
 
-/**
- * @implements ScalarValue<ScalarValueExample>
- */
 class ScalarValueExample implements ScalarValue
 {
     /** @var int */

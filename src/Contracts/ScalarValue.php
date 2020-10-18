@@ -29,8 +29,6 @@ namespace JSONSerializer\Contracts;
 
 /**
  * Interface declaring singular value data type.
- *
- * @template T
  */
 interface ScalarValue
 {

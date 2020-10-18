@@ -29,8 +29,6 @@ namespace JSONSerializer\Contracts;
 
 /**
  * Interface declaring list data type.
- *
- * @template T
  */
 interface ItemList
 {

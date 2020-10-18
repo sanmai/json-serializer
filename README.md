@@ -17,9 +17,6 @@ For example, deserialising this object:
 ```php
 use JSONSerializer\Contracts\ItemList;
 
-/**
- * @implements ItemList<ItemExample>
- */
 class ItemListExample implements ItemList
 {
     /** @var ItemExample[] */
@@ -63,3 +60,26 @@ Will leave an instance of `ItemListExample` in `$result` with `$result->items` f
 ### ScalarValue
 
 There's a similar convenience interface called `ScalarValue` to aid with unserializing wrapped primitive scalar values.
+
+```php
+use JSONSerializer\Contracts\ScalarValue;
+
+class ScalarValueExample implements ScalarValue
+{
+    /** @var int */
+    public $value;
+
+    public static function withValue($value)
+    {
+        $item = new self();
+        $item->value = $value;
+
+        return $item;
+    }
+
+    public static function getType(): string
+    {
+        return 'int';
+    }
+}
+```

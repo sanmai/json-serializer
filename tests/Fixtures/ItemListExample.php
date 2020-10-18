@@ -29,9 +29,6 @@ namespace Tests\JSONSerializer\Fixtures;
 
 use JSONSerializer\Contracts\ItemList;
 
-/**
- * @implements ItemList<ItemExample>
- */
 class ItemListExample implements ItemList
 {
     /** @var ItemExample[] */
