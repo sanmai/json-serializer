@@ -34,6 +34,7 @@ use JSONSerializer\Serializer;
 use PHPUnit\Framework\TestCase;
 use Tests\JSONSerializer\Fixtures\ItemExample;
 use Tests\JSONSerializer\Fixtures\ItemListExample;
+use Tests\JSONSerializer\Fixtures\ScalarValueExample;
 
 /**
  * @covers \JSONSerializer\Serializer
@@ -88,6 +89,15 @@ class SerializerTest extends TestCase
 
         $this->assertSame('bar', $itemList->items[1]->itemName);
         $this->assertSame(2, $itemList->items[1]->number);
+    }
+
+    public function test_it_can_deserialize_scalar_value()
+    {
+        $item = $this->serializer->deserialize('42', ScalarValueExample::class);
+
+        $this->assertInstanceOf(ScalarValueExample::class, $item);
+
+        $this->assertSame(42, $item->value);
     }
 
     public function test_it_can_take_custom_builder_with_custom_strategy()

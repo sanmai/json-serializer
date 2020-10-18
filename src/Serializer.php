@@ -36,6 +36,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
+use JSONSerializer\Contracts\ScalarValue;
 
 final class Serializer implements SerializerInterface
 {
@@ -94,8 +95,8 @@ final class Serializer implements SerializerInterface
 
     /**
      * @psalm-template T
-     * @psalm-param class-string<T>|class-string<ItemList> $type
-     * @psalm-return T|ItemList
+     * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     * @psalm-return T|ItemList|ScalarValue
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
      */
@@ -105,7 +106,25 @@ final class Serializer implements SerializerInterface
             return $this->deserializeListType($data, $type, $format, $context);
         }
 
+        if (\is_subclass_of($type, ScalarValue::class)) {
+            return $this->deserializeScalarValue($data, $type, $format, $context);
+        }
+
         return $this->serializer->deserialize($data, $type, $format, $context);
+    }
+
+    /**
+     * @param class-string<ScalarValue> $type
+     *
+     * @return ScalarValue
+     *
+     * @psalm-suppress ArgumentTypeCoercion
+     */
+    private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    {
+        $value = $this->serializer->deserialize($data, $type::getType(), $format, $context);
+
+        return $type::withValue($value);
     }
 
     /**
