@@ -37,7 +37,7 @@ PSALM_ARGS=--show-info=false
 PSALM_PHP_VERSION="PHP 7.3"
 
 # Composer
-COMPOSER=$(PHP) $(shell which composer)
+COMPOSER=$(shell which composer)
 
 # Infection
 INFECTION=vendor/bin/infection
