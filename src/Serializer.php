@@ -97,6 +97,7 @@ final class Serializer implements SerializerInterface
      * @psalm-template T
      * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
      * @psalm-return T|ItemList|ScalarValue
+     * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
      */
