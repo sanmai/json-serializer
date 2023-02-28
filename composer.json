@@ -29,7 +29,8 @@
         "vimeo/psalm": ">=3.0.16"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": true
     },
     "autoload": {
         "psr-4": {
