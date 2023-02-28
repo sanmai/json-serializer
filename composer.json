@@ -1,8 +1,8 @@
 {
     "name": "sanmai/json-serializer",
-    "type": "library",
     "description": "Flexible JSON Serializer",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Alexey Kopytko",
@@ -17,7 +17,6 @@
         "doctrine/annotations": "^1.10.4",
         "jms/serializer": "^3.9"
     },
-    "conflict": {},
     "require-dev": {
         "ergebnis/composer-normalize": "^2.8",
         "friendsofphp/php-cs-fixer": "^2.16.4",
@@ -28,10 +27,7 @@
         "phpunit/phpunit": "^9.4",
         "vimeo/psalm": ">=3.0.16"
     },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": true
-    },
+    "conflict": {},
     "autoload": {
         "psr-4": {
             "JSONSerializer\\": "src/"
@@ -41,5 +37,9 @@
         "psr-4": {
             "Tests\\JSONSerializer\\": "tests/"
         }
+    },
+    "config": {
+        "allow-plugins": true,
+        "sort-packages": true
     }
 }
