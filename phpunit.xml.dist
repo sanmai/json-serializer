@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/schema/9.2.xsd"
-         executionOrder="random" resolveDependencies="true"
-         bootstrap="vendor/autoload.php" colors="true">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+         executionOrder="random"
+         resolveDependencies="true"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory="build/cache/phpunit">
+  <coverage/>
   <testsuites>
     <testsuite name="Test Suite">
       <directory>tests</directory>
@@ -13,9 +17,9 @@
       <group>integration</group>
     </exclude>
   </groups>
-  <filter>
-    <whitelist>
+  <source>
+    <include>
       <directory suffix=".php">src/</directory>
-    </whitelist>
-  </filter>
+    </include>
+  </source>
 </phpunit>

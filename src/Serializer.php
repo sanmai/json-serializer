@@ -37,6 +37,8 @@ use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
 use JSONSerializer\Contracts\ScalarValue;
+use function is_subclass_of;
+use function sprintf;
 
 final class Serializer implements SerializerInterface
 {
@@ -45,9 +47,9 @@ final class Serializer implements SerializerInterface
     /** @var SerializerInterface */
     private $serializer;
 
-    public function __construct(?SerializerBuilder $builder = null)
+    public function __construct(SerializerBuilder $builder = null)
     {
-        $builder = $builder ?? self::makeSerializerBuilder();
+        $builder ??= self::makeSerializerBuilder();
 
         $this->serializer = $builder->build();
     }
@@ -66,7 +68,7 @@ final class Serializer implements SerializerInterface
         $builder->setSerializationVisitor(self::SERIALIZATION_JSON, $visitorFactory);
         $builder->setDeserializationVisitor(self::SERIALIZATION_JSON, new JsonDeserializationVisitorFactory());
 
-        return new Serializer($builder);
+        return new self($builder);
     }
 
     private static function makeSerializerBuilder(): SerializerBuilder
@@ -88,26 +90,29 @@ final class Serializer implements SerializerInterface
      *
      * @param mixed $data
      */
-    public function serialize($data, string $format = self::SERIALIZATION_JSON, ?SerializationContext $context = null, ?string $type = null): string
+    public function serialize($data, string $format = self::SERIALIZATION_JSON, SerializationContext $context = null, string $type = null): string
     {
         return $this->serializer->serialize($data, $format, $context, $type);
     }
 
     /**
      * @psalm-template T
+     *
      * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     *
      * @psalm-return T|ItemList|ScalarValue
+     *
      * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
      */
-    public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
     {
-        if (\is_subclass_of($type, ItemList::class)) {
+        if (is_subclass_of($type, ItemList::class)) {
             return $this->deserializeListType($data, $type, $format, $context);
         }
 
-        if (\is_subclass_of($type, ScalarValue::class)) {
+        if (is_subclass_of($type, ScalarValue::class)) {
             return $this->deserializeScalarValue($data, $type, $format, $context);
         }
 
@@ -121,7 +126,7 @@ final class Serializer implements SerializerInterface
      *
      * @psalm-suppress ArgumentTypeCoercion
      */
-    private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
     {
         $value = $this->serializer->deserialize($data, $type::getType(), $format, $context);
 
@@ -133,10 +138,10 @@ final class Serializer implements SerializerInterface
      *
      * @return ItemList
      */
-    private function deserializeListType(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    private function deserializeListType(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
     {
         /** @var class-string $arrayType */
-        $arrayType = \sprintf('array<%s>', $type::getListType());
+        $arrayType = sprintf('array<%s>', $type::getListType());
 
         /** @var array<object> $list */
         $list = $this->serializer->deserialize($data, $arrayType, $format, $context);

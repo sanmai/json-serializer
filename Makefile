@@ -25,7 +25,7 @@ export XDEBUG_MODE=coverage
 # Phan
 PHAN=vendor/bin/phan
 PHAN_ARGS=--analyze-twice --no-progress-bar --allow-polyfill-parser
-PHAN_PHP_VERSION=7.3
+PHAN_PHP_VERSION=7.4
 export PHAN_DISABLE_XDEBUG_WARN=1
 
 # PHPStan
@@ -35,7 +35,7 @@ PHPSTAN_ARGS=analyse src tests --level=2 -c .phpstan.neon
 # Psalm
 PSALM=vendor/bin/psalm
 PSALM_ARGS=--show-info=false
-PSALM_PHP_VERSION="PHP 7.3"
+PSALM_PHP_VERSION="PHP 7.4"
 
 # Composer
 COMPOSER=$(shell which composer)
@@ -55,7 +55,7 @@ all: test
 
 ci-test: SILENT=
 ci-test: prerequisites
-	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --verbose --group=$(PHPUNIT_GROUP)
+	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
 ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
@@ -95,7 +95,7 @@ test-prerequisites: prerequisites composer.lock
 
 .PHONY: phpunit
 phpunit: cs
-	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS) --verbose
+	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS)
 	CI=true $(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
 .PHONY: analyze

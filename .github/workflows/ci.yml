@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['7.3', '7.4', '8.0', '8.1', '8.2']
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
 
     name: CI PHP ${{ matrix.php-version }}
 
@@ -37,7 +37,7 @@ jobs:
             composer-${{ matrix.php-version }}-
             composer-
 
-      - name: Install composer-flags
+      - name: Install dependencies
         run: |
           composer update --prefer-dist --no-interaction --no-progress ${{ matrix.composer-flags }}
 
