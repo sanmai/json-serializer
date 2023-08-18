@@ -5,7 +5,7 @@
          resolveDependencies="true"
          bootstrap="vendor/autoload.php"
          colors="true"
-         cacheDirectory=".phpunit.cache">
+         cacheDirectory="build/cache/phpunit">
   <coverage/>
   <testsuites>
     <testsuite name="Test Suite">
