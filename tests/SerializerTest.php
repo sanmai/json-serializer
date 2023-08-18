@@ -109,7 +109,7 @@ final class SerializerTest extends TestCase
             new class() implements PropertyNamingStrategyInterface {
                 public function translateName(PropertyMetadata $property): string
                 {
-                    if ($property->name === ItemExample::ITEM_NAME_PROPERTY) {
+                    if (ItemExample::ITEM_NAME_PROPERTY === $property->name) {
                         return 'bar';
                     }
 
