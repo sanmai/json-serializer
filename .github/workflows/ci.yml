@@ -37,7 +37,7 @@ jobs:
             composer-${{ matrix.php-version }}-
             composer-
 
-      - name: Install composer-flags
+      - name: Install dependencies
         run: |
           composer update --prefer-dist --no-interaction --no-progress ${{ matrix.composer-flags }}
 
