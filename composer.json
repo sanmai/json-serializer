@@ -12,19 +12,18 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "ext-json": "*",
-        "doctrine/annotations": "^1.10.4",
         "jms/serializer": "^3.9"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.8",
-        "friendsofphp/php-cs-fixer": "^2.16.4",
+        "ergebnis/composer-normalize": ">=2.8",
+        "friendsofphp/php-cs-fixer": "^3.23.0",
         "infection/infection": ">=0.10",
         "phan/phan": ">=1",
         "php-coveralls/php-coveralls": "^2.4.1",
         "phpstan/phpstan": ">=0.10",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^9.4 || ^10",
         "vimeo/psalm": ">=3.0.16"
     },
     "conflict": {},

@@ -47,7 +47,7 @@ final class Serializer implements SerializerInterface
 
     public function __construct(?SerializerBuilder $builder = null)
     {
-        $builder = $builder ?? self::makeSerializerBuilder();
+        $builder ??= self::makeSerializerBuilder();
 
         $this->serializer = $builder->build();
     }
