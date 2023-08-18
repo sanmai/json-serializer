@@ -38,8 +38,10 @@ use Tests\JSONSerializer\Fixtures\ScalarValueExample;
 
 /**
  * @covers \JSONSerializer\Serializer
+ *
+ * @internal
  */
-class SerializerTest extends TestCase
+final class SerializerTest extends TestCase
 {
     private $serializer;
 
@@ -48,7 +50,7 @@ class SerializerTest extends TestCase
         $this->serializer = new Serializer();
     }
 
-    public function test_it_can_handle_simple_object()
+    public function test_it_can_handle_simple_object(): void
     {
         $json = $this->serializer->serialize(new ItemExample());
 
@@ -56,26 +58,26 @@ class SerializerTest extends TestCase
 
         $example = $this->serializer->deserialize($json, ItemExample::class);
 
-        /** @var $example ItemExample */
+        /** @var ItemExample $example */
         $this->assertNull($example->number);
 
         $example = $this->serializer->deserialize('{"itemName": "foo", "number": 1, "numbers": [1, 2, 3]}', ItemExample::class);
 
-        /** @var $example ItemExample */
+        /** @var ItemExample $example */
         $this->assertSame('foo', $example->itemName);
         $this->assertSame(1, $example->number);
         $this->assertSame([1, 2, 3], $example->numbers);
     }
 
-    public function test_it_respects_mixed_case_attributes()
+    public function test_it_respects_mixed_case_attributes(): void
     {
         $example = $this->serializer->deserialize('{"itemNaMe": "foo"}', ItemExample::class);
 
-        /** @var $example ItemExample */
+        /** @var ItemExample $example */
         $this->assertNull($example->itemName);
     }
 
-    public function test_it_can_deserialize_list_of_items()
+    public function test_it_can_deserialize_list_of_items(): void
     {
         $itemList = $this->serializer->deserialize('[{"itemName": "foo", "number": 1, "numbers": [1, 2, 3]}, {"itemName": "bar", "number": 2}]', ItemListExample::class);
 
@@ -91,7 +93,7 @@ class SerializerTest extends TestCase
         $this->assertSame(2, $itemList->items[1]->number);
     }
 
-    public function test_it_can_deserialize_scalar_value()
+    public function test_it_can_deserialize_scalar_value(): void
     {
         $item = $this->serializer->deserialize('42', ScalarValueExample::class);
 
@@ -100,7 +102,7 @@ class SerializerTest extends TestCase
         $this->assertSame(42, $item->value);
     }
 
-    public function test_it_can_take_custom_builder_with_custom_strategy()
+    public function test_it_can_take_custom_builder_with_custom_strategy(): void
     {
         $builder = SerializerBuilder::create();
         $builder->setPropertyNamingStrategy(
@@ -119,11 +121,11 @@ class SerializerTest extends TestCase
         $serializer = new Serializer($builder);
         $example = $serializer->deserialize('{"bar": "foo"}', ItemExample::class);
 
-        /** @var $example ItemExample */
+        /** @var ItemExample $example */
         $this->assertSame('foo', $example->itemName);
     }
 
-    public function test_it_can_serializer_with_flags()
+    public function test_it_can_serializer_with_flags(): void
     {
         $this->serializer = Serializer::withJSONOptions(JSON_PRETTY_PRINT);
 
@@ -137,7 +139,7 @@ class SerializerTest extends TestCase
 
         $example = $this->serializer->deserialize($json, ItemExample::class);
 
-        /** @var $example ItemExample */
+        /** @var ItemExample $example */
         $this->assertSame([1], $example->numbers);
     }
 }

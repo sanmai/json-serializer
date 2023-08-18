@@ -1,38 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 $header = trim('This code is licensed under the MIT License.'.substr(file_get_contents('LICENSE'), strlen('The MIT License')));
 
-use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
-
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+$config
     ->setRiskyAllowed(true)
     ->setRules([
-        '@Symfony' => true,
-        'array_syntax' => ['syntax' => 'short'],
-        'declare_strict_types' => true,
-        'explicit_indirect_variable' => true,
-        'no_superfluous_elseif' => true,
-        'no_unreachable_default_argument_value' => true,
-        'no_useless_else' => true,
-        'no_useless_return' => true,
+        'header_comment' => ['comment_type' => 'PHPDoc', 'header' => $header, 'separate' => 'bottom', 'location' => 'after_open'],
+
+        '@Symfony:risky' => true,
+        '@PHP71Migration:risky' => true,
+        '@PHPUnit75Migration:risky' => true,
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
+
         'ordered_class_elements' => false,
-        'non_printable_character' => true,
-        'ordered_imports' => true,
-        'php_unit_test_class_requires_covers' => true,
-        'phpdoc_add_missing_param_annotation' => true,
-        'phpdoc_order' => true,
-        'visibility_required' => true,
-        'header_comment' => ['header' => $header, 'separate' => 'bottom', 'location' => 'after_open', 'comment_type' => 'PHPDoc'],
-        'ternary_to_null_coalescing' => true,
-        'yoda_style' => null,
         'phpdoc_to_comment' => false,
-        'binary_operator_spaces' => ['operators' => ['=>' => BinaryOperatorSpacesFixer::ALIGN]],
-        'php_unit_method_casing' => ['case' => 'snake_case'],
         'strict_comparison' => true,
-        'native_function_invocation' => true,
+        'comment_to_phpdoc' => true,
+        'native_function_invocation' => ['include' => ['@internal'], 'scope' => 'namespaced'],
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => true,
+            'import_functions' => true,
+        ],
+        'php_unit_test_case_static_method_calls' => false,
+        'yoda_style' => false,
+        'random_api_migration' => false,
+        'blank_line_between_import_groups' => false,
+        'blank_line_before_statement' => ['statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try']],
+        'no_unset_on_property' => false,
+        'multiline_whitespace_before_semicolons' => false,
+        'php_unit_method_casing' => false,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
-        ->in(__DIR__)
+            ->in(__DIR__)
     )
 ;
+
+return $config;
