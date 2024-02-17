@@ -47,7 +47,7 @@ final class Serializer implements SerializerInterface
     /** @var SerializerInterface */
     private $serializer;
 
-    public function __construct(SerializerBuilder $builder = null)
+    public function __construct(?SerializerBuilder $builder = null)
     {
         $builder ??= self::makeSerializerBuilder();
 
@@ -87,10 +87,8 @@ final class Serializer implements SerializerInterface
 
     /**
      * @see \JMS\Serializer\SerializerInterface::serialize()
-     *
-     * @param mixed $data
      */
-    public function serialize($data, string $format = self::SERIALIZATION_JSON, SerializationContext $context = null, string $type = null): string
+    public function serialize($data, string $format = self::SERIALIZATION_JSON, ?SerializationContext $context = null, ?string $type = null): string
     {
         return $this->serializer->serialize($data, $format, $context, $type);
     }
@@ -106,7 +104,7 @@ final class Serializer implements SerializerInterface
      *
      * @see \JMS\Serializer\SerializerInterface::deserialize()
      */
-    public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
+    public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
         if (is_subclass_of($type, ItemList::class)) {
             return $this->deserializeListType($data, $type, $format, $context);
@@ -126,7 +124,7 @@ final class Serializer implements SerializerInterface
      *
      * @psalm-suppress ArgumentTypeCoercion
      */
-    private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
+    private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
         $value = $this->serializer->deserialize($data, $type::getType(), $format, $context);
 
@@ -138,7 +136,7 @@ final class Serializer implements SerializerInterface
      *
      * @return ItemList
      */
-    private function deserializeListType(string $data, string $type, string $format = self::SERIALIZATION_JSON, DeserializationContext $context = null)
+    private function deserializeListType(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
         /** @var class-string $arrayType */
         $arrayType = sprintf('array<%s>', $type::getListType());

@@ -35,8 +35,6 @@ interface ScalarValue
     public static function getType(): string;
 
     /**
-     * @param mixed $value
-     *
      * @return static
      */
     public static function withValue($value);
