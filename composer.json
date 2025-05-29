@@ -12,11 +12,12 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.2",
         "ext-json": "*",
-        "jms/serializer": "^3.9"
+        "jms/serializer": "^3.32.5"
     },
     "require-dev": {
+        "doctrine/annotations": "^2.0.2",
         "ergebnis/composer-normalize": ">=2.8",
         "friendsofphp/php-cs-fixer": "^3.23.0",
         "infection/infection": ">=0.10",
@@ -26,7 +27,6 @@
         "phpunit/phpunit": "^9.4 || ^10",
         "vimeo/psalm": ">=3.0.16"
     },
-    "conflict": {},
     "autoload": {
         "psr-4": {
             "JSONSerializer\\": "src/"
