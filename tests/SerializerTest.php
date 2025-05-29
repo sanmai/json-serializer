@@ -106,7 +106,7 @@ final class SerializerTest extends TestCase
     {
         $builder = SerializerBuilder::create();
         $builder->setPropertyNamingStrategy(
-            new class() implements PropertyNamingStrategyInterface {
+            new class implements PropertyNamingStrategyInterface {
                 public function translateName(PropertyMetadata $property): string
                 {
                     if (ItemExample::ITEM_NAME_PROPERTY === $property->name) {

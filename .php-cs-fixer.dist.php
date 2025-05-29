@@ -21,6 +21,7 @@ $config
         'blank_line_between_import_groups' => false,
         'strict_comparison' => true,
         'php_unit_method_casing' => false,
+        'blank_line_after_opening_tag' => false,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
