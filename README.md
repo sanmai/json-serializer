@@ -5,6 +5,10 @@
 
 This library is a thin wrapper around [jms/serializer](https://github.com/schmittjoh/serializer). 
 
+```
+composer require sanmai/json-serializer
+```
+
 The purpose of this library is to make simpler deserialization/serialization of objects and, specifically, of arrays of objects, and scalar values. All you need is to follow a simple protocol.
 
 ### ItemList
