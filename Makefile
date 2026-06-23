@@ -39,6 +39,9 @@ PSALM_PHP_VERSION="PHP 7.4"
 
 # Composer
 COMPOSER=$(shell which composer)
+ifdef GITHUB_TOKEN
+COMPOSER_AUTH_ENV=git config --global github.accesstoken "$(GITHUB_TOKEN)" &&
+endif
 
 # Infection
 INFECTION=vendor/bin/infection
@@ -77,7 +80,7 @@ ci-psalm: ci-cs
 
 ci-cs: prerequisites
 	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --dry-run --stop-on-violation fix
-	$(SILENT) $(COMPOSER) normalize --no-check-lock --dry-run
+	$(SILENT) $(COMPOSER_AUTH_ENV) $(COMPOSER) normalize --no-check-lock --dry-run
 
 ##############################################################
 # Development Workflow                                       #
@@ -88,7 +91,7 @@ test: analyze phpunit composer-validate
 
 .PHONY: composer-validate
 composer-validate: test-prerequisites
-	$(SILENT) $(COMPOSER) validate --strict
+	$(SILENT) $(COMPOSER_AUTH_ENV) $(COMPOSER) validate --strict
 
 .PHONY: test-prerequisites
 test-prerequisites: prerequisites composer.lock
@@ -128,12 +131,12 @@ prerequisites: report-php-version build/cache vendor/autoload.php .phan composer
 
 # Do install if there's no 'vendor'
 vendor/autoload.php:
-	$(SILENT) $(COMPOSER) install --prefer-dist
+	$(SILENT) $(COMPOSER_AUTH_ENV) $(COMPOSER) install --prefer-dist --no-plugins --no-scripts
 
 # If composer.lock is older than `composer.json`, do update,
 # and touch composer.lock because composer not always does that
 composer.lock: composer.json
-	$(SILENT) $(COMPOSER) update && touch composer.lock
+	$(SILENT) $(COMPOSER_AUTH_ENV) $(COMPOSER) update --no-plugins --no-scripts && touch composer.lock
 
 .phan:
 	$(PHP) $(PHAN) --init --init-level=1 --init-overwrite --target-php-version=$(PHAN_PHP_VERSION) > /dev/null
