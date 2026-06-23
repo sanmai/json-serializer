@@ -86,7 +86,7 @@ final class Serializer implements SerializerInterface
     }
 
     /**
-     * @see \JMS\Serializer\SerializerInterface::serialize()
+     * @see SerializerInterface::serialize()
      */
     public function serialize($data, string $format = self::SERIALIZATION_JSON, ?SerializationContext $context = null, ?string $type = null): string
     {
@@ -102,7 +102,7 @@ final class Serializer implements SerializerInterface
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      *
-     * @see \JMS\Serializer\SerializerInterface::deserialize()
+     * @see SerializerInterface::deserialize()
      */
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
