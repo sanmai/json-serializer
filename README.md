@@ -87,6 +87,7 @@ class ItemListExample implements ItemList
 ```
 
 From a JSON array:
+
 ```json
 [
     {"name": "foo"},
@@ -104,7 +105,7 @@ $serializer = new Serializer();
 $result = $serializer->deserialize($json, ItemListExample::class);
 ```
 
-Will leave an instance of `ItemListExample` in `$result` with `$result->items` filled with two items as in the source array.
+This leaves an instance of `ItemListExample` in `$result`, with `$result->items` holding the two items from the source array.
 
 ## ScalarValue
 
@@ -131,6 +132,7 @@ class ScalarValueExample implements ScalarValue
     }
 }
 ```
+
 ## Troubleshooting
 
 ### Class "JSONSerializer\Serializer" not found
