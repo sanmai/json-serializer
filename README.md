@@ -11,6 +11,46 @@ composer require sanmai/json-serializer
 
 The purpose of this library is to make simpler deserialization/serialization of objects and, specifically, of arrays of objects, and scalar values. All you need is to follow a simple protocol.
 
+## How it works
+
+The library provides one general rule for deserializing every JSON value into a domain type.
+
+Normally, application code using JMS Serializer follows a simple and predictable pattern:
+
+```php
+$result = $serializer->deserialize($json, MyType::class, 'json');
+```
+
+This works well for objects and generalizes naturally to different domain types. However, the pattern breaks for root-level arrays and scalar values. The caller must use JMS type expressions and primitive type strings instead of a class. For example, deserializing this array:
+
+```json
+[
+    {"name": "foo"},
+    {"name": "bar"}
+]
+```
+Requires an out-of-pattern string type:
+
+```php
+$items = $serializer->deserialize($json, sprintf('array<%s>', ItemExample::class), 'json');
+```
+
+A scalar value requires a similar exception:
+
+```php
+$number = $serializer->deserialize($json, 'int', 'json');
+```
+
+Consequently, the caller has to use a different kind of type declaration to handle a plain array or primitive value instead of a domain object.
+
+This library restores the general class-based rule for all three JSON shapes:
+
+```php
+$item = $serializer->deserialize($json, ItemExample::class);
+$items = $serializer->deserialize($json, ItemListExample::class);
+$number = $serializer->deserialize($json, ScalarValueExample::class);
+```
+
 ## ItemList
 
 JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain array. This library abstracts away this extra complexity by providing a two-method protocol instead.
