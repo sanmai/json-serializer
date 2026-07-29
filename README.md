@@ -51,11 +51,16 @@ $items = $serializer->deserialize($json, ItemListExample::class);
 $number = $serializer->deserialize($json, ScalarValueExample::class);
 ```
 
+A class like `ItemExample` already declares its own fields and its own serialization guidance. Arrays and scalar values have no such place, so that knowledge leaks into the calling code, or into a serializer adapter class.
+
+The interfaces this library adds put that knowledge in the type itself, turning lists and scalars into first-class domain members. So there is no extra class and no adapter layer, and nothing about a type lives outside of it. Calling code can then ask for a domain type whatever the shape of the JSON, and the library handles the rest.
+
 ## ItemList
 
 JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain array. This library abstracts away this extra complexity by providing a two-method protocol instead.
+The `ItemList` interface restores the class-based rule for arrays. Its two-method protocol declares the element type and constructs the domain collection from the deserialized items.
 
-For example, deserialising this object:
+For example, deserializing this object:
 
 ```php
 use JSONSerializer\Contracts\ItemList;
