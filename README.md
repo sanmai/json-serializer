@@ -1,15 +1,15 @@
 # Flexible JSON Serializer
 
 [![Latest Stable Version](https://poser.pugx.org/sanmai/json-serializer/v/stable)](https://packagist.org/packages/sanmai/json-serializer)
-[![Coverage Status](https://coveralls.io/repos/github/sanmai/json-serializer/badge.svg?branch=master)](https://coveralls.io/github/sanmai/json-serializer?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/sanmai/json-serializer/badge.svg?branch=main)](https://coveralls.io/github/sanmai/json-serializer?branch=main)
 
-This library is a thin wrapper around [jms/serializer](https://github.com/schmittjoh/serializer). 
+This library is a thin wrapper around [jms/serializer](https://github.com/schmittjoh/serializer).
 
 ```
 composer require sanmai/json-serializer
 ```
 
-The purpose of this library is to make simpler deserialization/serialization of objects and, specifically, of arrays of objects, and scalar values. All you need is to follow a simple protocol.
+This library makes it simpler to serialize and deserialize arrays of objects, scalar values, and plain objects. All you need is to follow a simple protocol.
 
 ## How it works
 
@@ -29,6 +29,7 @@ This works well for objects and generalizes naturally to different domain types.
     {"name": "bar"}
 ]
 ```
+
 Requires an out-of-pattern string type:
 
 ```php
@@ -61,7 +62,7 @@ JMS Serializer supports deserializing arrays out of the box, but it is ever so s
 
 This library abstracts away this extra complexity by providing a two-method protocol instead to constructs the domain collection.
 
-Here's how it looks like:
+Here is how it looks:
 
 ```php
 use JSONSerializer\Contracts\ItemList;
@@ -69,7 +70,7 @@ use JSONSerializer\Contracts\ItemList;
 class ItemListExample implements ItemList
 {
     /** @var ItemExample[] */
-    public $items = [];
+    public array $items = [];
 
     public static function getListType(): string
     {
@@ -87,6 +88,7 @@ class ItemListExample implements ItemList
 ```
 
 From a JSON array:
+
 ```json
 [
     {"name": "foo"},
@@ -104,19 +106,18 @@ $serializer = new Serializer();
 $result = $serializer->deserialize($json, ItemListExample::class);
 ```
 
-Will leave an instance of `ItemListExample` in `$result` with `$result->items` filled with two items as in the source array.
+This leaves an instance of `ItemListExample` in `$result`, with `$result->items` holding the two items from the source array.
 
 ## ScalarValue
 
-There's a similar convenience interface called `ScalarValue` to aid with unserializing wrapped primitive scalar values.
+There is a similar convenience interface called `ScalarValue` to aid with deserializing wrapped primitive scalar values.
 
 ```php
 use JSONSerializer\Contracts\ScalarValue;
 
 class ScalarValueExample implements ScalarValue
 {
-    /** @var int */
-    public $value;
+    public int $value;
 
     public static function withValue($value)
     {
@@ -132,6 +133,7 @@ class ScalarValueExample implements ScalarValue
     }
 }
 ```
+
 ## Troubleshooting
 
 ### Class "JSONSerializer\Serializer" not found

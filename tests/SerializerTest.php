@@ -35,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\JSONSerializer\Fixtures\ItemExample;
 use Tests\JSONSerializer\Fixtures\ItemListExample;
 use Tests\JSONSerializer\Fixtures\ScalarValueExample;
+use function sprintf;
 
 /**
  * @covers \JSONSerializer\Serializer
@@ -91,6 +92,25 @@ final class SerializerTest extends TestCase
 
         $this->assertSame('bar', $itemList->items[1]->itemName);
         $this->assertSame(2, $itemList->items[1]->number);
+    }
+
+    public function test_it_passes_array_types_through_to_jms(): void
+    {
+        $items = $this->serializer->deserialize(
+            '[{"itemName": "foo", "number": 1, "numbers": [1, 2, 3]}, {"itemName": "bar", "number": 2}]',
+            sprintf('array<%s>', ItemExample::class),
+        );
+
+        $this->assertContainsOnlyInstancesOf(ItemExample::class, $items);
+
+        $this->assertCount(2, $items);
+
+        $this->assertSame('foo', $items[0]->itemName);
+        $this->assertSame(1, $items[0]->number);
+        $this->assertSame([1, 2, 3], $items[0]->numbers);
+
+        $this->assertSame('bar', $items[1]->itemName);
+        $this->assertSame(2, $items[1]->number);
     }
 
     public function test_it_can_deserialize_scalar_value(): void
