@@ -69,7 +69,7 @@ use JSONSerializer\Contracts\ItemList;
 class ItemListExample implements ItemList
 {
     /** @var ItemExample[] */
-    public $items = [];
+    public array $items = [];
 
     public static function getListType(): string
     {
@@ -115,8 +115,7 @@ use JSONSerializer\Contracts\ScalarValue;
 
 class ScalarValueExample implements ScalarValue
 {
-    /** @var int */
-    public $value;
+    public int $value;
 
     public static function withValue($value)
     {
