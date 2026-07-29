@@ -1,15 +1,15 @@
 # Flexible JSON Serializer
 
 [![Latest Stable Version](https://poser.pugx.org/sanmai/json-serializer/v/stable)](https://packagist.org/packages/sanmai/json-serializer)
-[![Coverage Status](https://coveralls.io/repos/github/sanmai/json-serializer/badge.svg?branch=master)](https://coveralls.io/github/sanmai/json-serializer?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/sanmai/json-serializer/badge.svg?branch=main)](https://coveralls.io/github/sanmai/json-serializer?branch=main)
 
-This library is a thin wrapper around [jms/serializer](https://github.com/schmittjoh/serializer). 
+This library is a thin wrapper around [jms/serializer](https://github.com/schmittjoh/serializer).
 
 ```
 composer require sanmai/json-serializer
 ```
 
-The purpose of this library is to make simpler deserialization/serialization of objects and, specifically, of arrays of objects, and scalar values. All you need is to follow a simple protocol.
+This library makes it simpler to serialize and deserialize arrays of objects, scalar values, and plain object. All you need is to follow a simple protocol.
 
 ## How it works
 
@@ -61,7 +61,7 @@ JMS Serializer supports deserializing arrays out of the box, but it is ever so s
 
 This library abstracts away this extra complexity by providing a two-method protocol instead to constructs the domain collection.
 
-Here's how it looks like:
+Here is how it looks:
 
 ```php
 use JSONSerializer\Contracts\ItemList;
