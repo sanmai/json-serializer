@@ -9,7 +9,7 @@ This library is a thin wrapper around [jms/serializer](https://github.com/schmit
 composer require sanmai/json-serializer
 ```
 
-This library makes it simpler to serialize and deserialize arrays of objects, scalar values, and plain object. All you need is to follow a simple protocol.
+This library makes it simpler to serialize and deserialize arrays of objects, scalar values, and plain objects. All you need is to follow a simple protocol.
 
 ## How it works
 
