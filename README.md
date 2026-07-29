@@ -11,7 +11,7 @@ composer require sanmai/json-serializer
 
 The purpose of this library is to make simpler deserialization/serialization of objects and, specifically, of arrays of objects, and scalar values. All you need is to follow a simple protocol.
 
-### ItemList
+## ItemList
 
 JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain array. This library abstracts away this extra complexity by providing a two-method protocol instead.
 
@@ -60,7 +60,7 @@ $result = $serializer->deserialize($json, ItemListExample::class);
 
 Will leave an instance of `ItemListExample` in `$result` with `$result->items` filled with two items as in the source array.
 
-### ScalarValue
+## ScalarValue
 
 There's a similar convenience interface called `ScalarValue` to aid with unserializing wrapped primitive scalar values.
 
@@ -85,4 +85,13 @@ class ScalarValueExample implements ScalarValue
         return 'int';
     }
 }
+```
+## Troubleshooting
+
+### Class "JSONSerializer\Serializer" not found
+
+If you are getting an error that class `JSONSerializer\Serializer` was not found, you must have forgotten to do:
+
+```
+composer require sanmai/json-serializer
 ```
