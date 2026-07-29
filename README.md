@@ -134,55 +134,6 @@ class ScalarValueExample implements ScalarValue
 }
 ```
 
-From a bare JSON scalar:
-
-```json
-42
-```
-
-With the same familiar method:
-
-```php
-$result = $serializer->deserialize($json, ScalarValueExample::class);
-```
-
-This leaves an instance of `ScalarValueExample` in `$result`, with `$result->value` set to `42`.
-
-## Serializing
-
-Serialization needs no protocol. Pass an object, get JSON back:
-
-```php
-$item = new ItemExample();
-$item->name = 'foo';
-
-$json = $serializer->serialize($item);
-```
-
-```json
-{"name":"foo"}
-```
-
-Note that the two interfaces above work one way only. Serializing an `ItemListExample` gives `{"items": [...]}`, and a `ScalarValueExample` gives `{"value": 42}`, matching the properties of the wrapper rather than the JSON these types deserialize from.
-
-### JSON options
-
-To set JSON flags such as `JSON_PRETTY_PRINT`, make the serializer with `withJSONOptions()`:
-
-```php
-$serializer = Serializer::withJSONOptions(JSON_PRETTY_PRINT);
-
-$json = $serializer->serialize($item);
-```
-
-```json
-{
-    "name": "foo"
-}
-```
-
-Called without an argument it uses `JSON_PRESERVE_ZERO_FRACTION`, the same flag a plain `new Serializer()` gets. Any bitmask you pass replaces that default, so include `JSON_PRESERVE_ZERO_FRACTION` yourself if you still want floats like `1.0` to keep their zero fraction.
-
 ## Troubleshooting
 
 ### Class "JSONSerializer\Serializer" not found
