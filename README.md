@@ -57,10 +57,11 @@ The interfaces this library adds put that knowledge in the type itself, turning 
 
 ## ItemList
 
-JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain array. This library abstracts away this extra complexity by providing a two-method protocol instead.
-The `ItemList` interface restores the class-based rule for arrays. Its two-method protocol declares the element type and constructs the domain collection from the deserialized items.
+JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain untyped array.
 
-For example, deserializing this object:
+This library abstracts away this extra complexity by providing a two-method protocol instead to constructs the domain collection.
+
+Here's how it looks like:
 
 ```php
 use JSONSerializer\Contracts\ItemList;
