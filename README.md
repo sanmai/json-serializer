@@ -29,6 +29,7 @@ This works well for objects and generalizes naturally to different domain types.
     {"name": "bar"}
 ]
 ```
+
 Requires an out-of-pattern string type:
 
 ```php
@@ -109,7 +110,7 @@ This leaves an instance of `ItemListExample` in `$result`, with `$result->items`
 
 ## ScalarValue
 
-There's a similar convenience interface called `ScalarValue` to aid with unserializing wrapped primitive scalar values.
+There is a similar convenience interface called `ScalarValue` to aid with deserializing wrapped primitive scalar values.
 
 ```php
 use JSONSerializer\Contracts\ScalarValue;
