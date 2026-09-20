@@ -22,20 +22,9 @@ PHPUNIT_GROUP=default
 PHPUNIT_ARGS=--coverage-xml=build/logs/coverage-xml --log-junit=build/logs/junit.xml $(PHPUNIT_COVERAGE_CLOVER)
 export XDEBUG_MODE=coverage
 
-# Phan
-PHAN=vendor/bin/phan
-PHAN_ARGS=--analyze-twice --no-progress-bar --allow-polyfill-parser
-PHAN_PHP_VERSION=8.2
-export PHAN_DISABLE_XDEBUG_WARN=1
-
 # PHPStan
 PHPSTAN=vendor/bin/phpstan
 PHPSTAN_ARGS=analyse src tests --level=2 -c .phpstan.neon
-
-# Psalm
-PSALM=vendor/bin/psalm
-PSALM_ARGS=--show-info=false
-PSALM_PHP_VERSION="PHP 8.2"
 
 # Composer
 COMPOSER=$(shell which composer)
@@ -58,7 +47,7 @@ ci-test: prerequisites
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-phpunit ci-infection ci-phpstan
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
@@ -66,14 +55,8 @@ ci-phpunit: ci-cs
 ci-infection: ci-phpunit
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
-ci-phan: ci-cs
-	$(SILENT) $(PHP) $(PHAN) $(PHAN_ARGS)
-
 ci-phpstan: ci-cs
 	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS) --no-progress
-
-ci-psalm: ci-cs
-	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS) --no-cache
 
 ci-cs: prerequisites
 	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --dry-run --stop-on-violation fix
@@ -99,19 +82,11 @@ phpunit: cs
 	CI=true $(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
 .PHONY: analyze
-analyze: phan phpstan psalm
-
-.PHONY: phan
-phan: cs
-	$(SILENT) $(PHP) $(PHAN) $(PHAN_ARGS) --color
+analyze: phpstan
 
 .PHONY: phpstan
 phpstan: cs
 	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS)
-
-.PHONY: psalm
-psalm: cs
-	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS)
 
 .PHONY: cs
 cs: test-prerequisites
@@ -124,7 +99,7 @@ cs: test-prerequisites
 
 # We need both vendor/autoload.php and composer.lock being up to date
 .PHONY: prerequisites
-prerequisites: report-php-version build/cache vendor/autoload.php .phan composer.lock
+prerequisites: report-php-version build/cache vendor/autoload.php composer.lock
 
 # Do install if there's no 'vendor'
 vendor/autoload.php:
@@ -134,9 +109,6 @@ vendor/autoload.php:
 # and touch composer.lock because composer not always does that
 composer.lock: composer.json
 	$(SILENT) $(COMPOSER) update && touch composer.lock
-
-.phan:
-	$(PHP) $(PHAN) --init --init-level=1 --init-overwrite --target-php-version=$(PHAN_PHP_VERSION) > /dev/null
 
 build/cache:
 	mkdir -p build/cache

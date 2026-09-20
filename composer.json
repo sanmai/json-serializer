@@ -21,11 +21,9 @@
         "ergebnis/composer-normalize": ">=2.8",
         "friendsofphp/php-cs-fixer": "^3.23.0",
         "infection/infection": ">=0.31",
-        "phan/phan": ">=1",
         "php-coveralls/php-coveralls": "^2.4.1",
         "phpstan/phpstan": ">=0.10",
-        "phpunit/phpunit": "^9.4 || ^10",
-        "vimeo/psalm": ">=3.0.16"
+        "phpunit/phpunit": "^9.4 || ^10"
     },
     "autoload": {
         "psr-4": {
