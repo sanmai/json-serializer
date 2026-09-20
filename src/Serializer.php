@@ -100,13 +100,11 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     }
 
     /**
-     * @psalm-template T
+     * @template T
      *
-     * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     * @param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
      *
-     * @psalm-return T|ItemList|ScalarValue
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
+     * @return T|ItemList|ScalarValue
      *
      * @see SerializerInterface::deserialize()
      */
@@ -131,8 +129,6 @@ final class Serializer implements SerializerInterface, JsonDeserializer
      *
      * @return T
      *
-     * @phan-suppress PhanPartialTypeMismatchReturn
-     *
      * @see JsonDeserializer::deserializeJson()
      */
     #[Override]
@@ -148,8 +144,6 @@ final class Serializer implements SerializerInterface, JsonDeserializer
      * @param class-string<ScalarValue> $type
      *
      * @return ScalarValue
-     *
-     * @psalm-suppress ArgumentTypeCoercion
      */
     private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
