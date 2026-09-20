@@ -113,11 +113,6 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     #[Override]
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {
-        return $this->deserializeType($data, $type, $format, $context);
-    }
-
-    private function deserializeType(string $data, string $type, string $format, ?DeserializationContext $context)
-    {
         if (is_subclass_of($type, ItemList::class)) {
             return $this->deserializeListType($data, $type, $format, $context);
         }
@@ -136,13 +131,15 @@ final class Serializer implements SerializerInterface, JsonDeserializer
      *
      * @return T
      *
+     * @phan-suppress PhanPartialTypeMismatchReturn
+     *
      * @see JsonDeserializer::deserializeJson()
      */
     #[Override]
     public function deserializeJson(string $data, string $type, ?DeserializationContext $context = null): object
     {
         /** @var T $result */
-        $result = $this->deserializeType($data, $type, self::SERIALIZATION_JSON, $context);
+        $result = $this->deserialize($data, $type, self::SERIALIZATION_JSON, $context);
 
         return $result;
     }
