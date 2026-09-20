@@ -36,6 +36,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
+use JSONSerializer\Contracts\JsonDeserializer;
 use JSONSerializer\Contracts\ScalarValue;
 use Override;
 use function is_subclass_of;
@@ -44,7 +45,7 @@ use function sprintf;
 /**
  * @api
  */
-final class Serializer implements SerializerInterface
+final class Serializer implements SerializerInterface, JsonDeserializer
 {
     private const SERIALIZATION_JSON = 'json';
 
@@ -99,13 +100,11 @@ final class Serializer implements SerializerInterface
     }
 
     /**
-     * @psalm-template T
+     * @template T
      *
-     * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     * @param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
      *
-     * @psalm-return T|ItemList|ScalarValue
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
+     * @return T|ItemList|ScalarValue
      *
      * @see SerializerInterface::deserialize()
      */
@@ -124,11 +123,27 @@ final class Serializer implements SerializerInterface
     }
 
     /**
+     * @template T of object
+     *
+     * @param class-string<T> $type
+     *
+     * @return T
+     *
+     * @see JsonDeserializer::deserializeJson()
+     */
+    #[Override]
+    public function deserializeJson(string $data, string $type, ?DeserializationContext $context = null): object
+    {
+        /** @var T $result */
+        $result = $this->deserialize($data, $type, self::SERIALIZATION_JSON, $context);
+
+        return $result;
+    }
+
+    /**
      * @param class-string<ScalarValue> $type
      *
      * @return ScalarValue
-     *
-     * @psalm-suppress ArgumentTypeCoercion
      */
     private function deserializeScalarValue(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
     {

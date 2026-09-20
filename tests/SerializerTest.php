@@ -44,7 +44,7 @@ use function sprintf;
  */
 final class SerializerTest extends TestCase
 {
-    private $serializer;
+    private Serializer $serializer;
 
     protected function setUp(): void
     {
@@ -118,6 +118,30 @@ final class SerializerTest extends TestCase
         $item = $this->serializer->deserialize('42', ScalarValueExample::class);
 
         $this->assertInstanceOf(ScalarValueExample::class, $item);
+
+        $this->assertSame(42, $item->value);
+    }
+
+    public function test_it_deserializes_json_into_a_typed_object(): void
+    {
+        $example = $this->serializer->deserializeJson('{"itemName": "foo", "number": 1}', ItemExample::class);
+
+        $this->assertSame('foo', $example->itemName);
+        $this->assertSame(1, $example->number);
+    }
+
+    public function test_it_deserializes_json_into_a_typed_list(): void
+    {
+        $itemList = $this->serializer->deserializeJson('[{"itemName": "foo"}, {"itemName": "bar"}]', ItemListExample::class);
+
+        $this->assertCount(2, $itemList->items);
+        $this->assertSame('foo', $itemList->items[0]->itemName);
+        $this->assertSame('bar', $itemList->items[1]->itemName);
+    }
+
+    public function test_it_deserializes_json_into_a_typed_scalar_value(): void
+    {
+        $item = $this->serializer->deserializeJson('42', ScalarValueExample::class);
 
         $this->assertSame(42, $item->value);
     }
