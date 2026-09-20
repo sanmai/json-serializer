@@ -36,6 +36,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
+use JSONSerializer\Contracts\JsonDeserializer;
 use JSONSerializer\Contracts\ScalarValue;
 use Override;
 use function is_subclass_of;
@@ -44,7 +45,7 @@ use function sprintf;
 /**
  * @api
  */
-final class Serializer implements SerializerInterface
+final class Serializer implements SerializerInterface, JsonDeserializer
 {
     private const SERIALIZATION_JSON = 'json';
 
@@ -121,6 +122,24 @@ final class Serializer implements SerializerInterface
         }
 
         return $this->serializer->deserialize($data, $type, $format, $context);
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $type
+     *
+     * @return T
+     *
+     * @see JsonDeserializer::deserializeJson()
+     */
+    #[Override]
+    public function deserializeJson(string $data, string $type, ?DeserializationContext $context = null): object
+    {
+        /** @var T $result */
+        $result = $this->deserialize($data, $type, self::SERIALIZATION_JSON, $context);
+
+        return $result;
     }
 
     /**
