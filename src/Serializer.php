@@ -100,15 +100,11 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     }
 
     /**
-     * @psalm-template T
+     * Deserializes any acceptable type, including JMS type expressions.
      *
-     * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
-     *
-     * @psalm-return T|ItemList|ScalarValue
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @see SerializerInterface::deserialize()
+     * @see JsonDeserializer::deserializeJson()
      */
     #[Override]
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)

@@ -25,7 +25,7 @@ export XDEBUG_MODE=coverage
 # Phan
 PHAN=vendor/bin/phan
 PHAN_ARGS=--analyze-twice --no-progress-bar --allow-polyfill-parser
-PHAN_PHP_VERSION=7.4
+PHAN_PHP_VERSION=8.2
 export PHAN_DISABLE_XDEBUG_WARN=1
 
 # PHPStan
@@ -35,7 +35,7 @@ PHPSTAN_ARGS=analyse src tests --level=2 -c .phpstan.neon
 # Psalm
 PSALM=vendor/bin/psalm
 PSALM_ARGS=--show-info=false
-PSALM_PHP_VERSION="PHP 7.4"
+PSALM_PHP_VERSION="PHP 8.2"
 
 # Composer
 COMPOSER=$(shell which composer)
@@ -44,8 +44,8 @@ COMPOSER=$(shell which composer)
 INFECTION=vendor/bin/infection
 MIN_MSI=90
 MIN_COVERED_MSI=90
-INFECTION_ARGS=--min-msi=$(MIN_MSI) --min-covered-msi=$(MIN_COVERED_MSI) --threads=$(JOBS) --coverage=build/logs --log-verbosity=default --show-mutations --no-interaction --only-covered
-INFECTION_PHP_VERSION="PHP 7.3"
+INFECTION_ARGS=--min-msi=$(MIN_MSI) --min-covered-msi=$(MIN_COVERED_MSI) --threads=$(JOBS) --coverage=build/logs --log-verbosity=default --show-mutations --no-interaction
+INFECTION_PHP_VERSION="PHP 8.2"
 
 all: test
 
