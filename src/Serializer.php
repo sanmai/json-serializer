@@ -100,14 +100,23 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     }
 
     /**
-     * Deserializes any acceptable type, including JMS type expressions.
+     * @psalm-template T
      *
+     * @psalm-param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     *
+     * @psalm-return T|ItemList|ScalarValue
+     *
+     * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @see SerializerInterface::deserialize()
-     * @see JsonDeserializer::deserializeJson()
      */
     #[Override]
     public function deserialize(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    {
+        return $this->deserializeType($data, $type, $format, $context);
+    }
+
+    private function deserializeType(string $data, string $type, string $format, ?DeserializationContext $context)
     {
         if (is_subclass_of($type, ItemList::class)) {
             return $this->deserializeListType($data, $type, $format, $context);
@@ -133,7 +142,7 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     public function deserializeJson(string $data, string $type, ?DeserializationContext $context = null): object
     {
         /** @var T $result */
-        $result = $this->deserialize($data, $type, self::SERIALIZATION_JSON, $context);
+        $result = $this->deserializeType($data, $type, self::SERIALIZATION_JSON, $context);
 
         return $result;
     }
