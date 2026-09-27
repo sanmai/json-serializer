@@ -44,11 +44,12 @@ $number = $serializer->deserialize($json, 'int', 'json');
 
 Consequently, the caller has to use a different kind of type declaration to handle a plain array or primitive value instead of a domain object.
 
-This library restores the general class-based rule for all three JSON shapes:
+This library restores the general class-based rule for all four JSON shapes:
 
 ```php
 $item = $serializer->deserialize($json, ItemExample::class);
 $items = $serializer->deserialize($json, ItemListExample::class);
+$map = $serializer->deserialize($json, ItemMapExample::class);
 $number = $serializer->deserialize($json, ScalarValueExample::class);
 ```
 
@@ -107,6 +108,54 @@ $result = $serializer->deserialize($json, ItemListExample::class);
 ```
 
 This leaves an instance of `ItemListExample` in `$result`, with `$result->items` holding the two items from the source array.
+
+## ItemMap
+
+`ItemList` covers a root-level JSON array, but some APIs return a root-level JSON object with keys that are data, not field names:
+
+```json
+{
+    "is_urgent": {"no": 0.1, "yes": 0.9},
+    "department": {"billing": 0.8, "technical": 0.2}
+}
+```
+
+The `ItemMap` interface declares the type of the keys and the type of the values. The value type can be a class name or a JMS type expression, so a map of plain values needs no extra class.
+
+```php
+use JSONSerializer\Contracts\ItemMap;
+
+class Distributions implements ItemMap
+{
+    /** @var array<string, array<string, float>> */
+    public array $items = [];
+
+    public static function getKeyType(): string
+    {
+        return 'string';
+    }
+
+    public static function getItemType(): string
+    {
+        return 'array<string, float>';
+    }
+
+    public static function withMap(array $map)
+    {
+        $distributions = new self();
+        $distributions->items = $map;
+
+        return $distributions;
+    }
+}
+```
+
+```php
+$distributions = $serializer->deserialize($json, Distributions::class);
+$distributions->items['is_urgent']['yes']; // 0.9
+```
+
+The keys of the JSON object stay as they are. An empty JSON object `{}` gives an empty map. Do not implement both `ItemList` and `ItemMap` in one class: `ItemList` takes precedence.
 
 ## ScalarValue
 
