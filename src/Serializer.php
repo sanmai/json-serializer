@@ -36,6 +36,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Visitor\Factory\JsonDeserializationVisitorFactory;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use JSONSerializer\Contracts\ItemList;
+use JSONSerializer\Contracts\ItemMap;
 use JSONSerializer\Contracts\JsonDeserializer;
 use JSONSerializer\Contracts\ScalarValue;
 use Override;
@@ -102,9 +103,9 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     /**
      * @template T
      *
-     * @param class-string<T>|class-string<ItemList>|class-string<ScalarValue> $type
+     * @param class-string<T>|class-string<ItemList>|class-string<ItemMap>|class-string<ScalarValue> $type
      *
-     * @return T|ItemList|ScalarValue
+     * @return T|ItemList|ItemMap|ScalarValue
      *
      * @see SerializerInterface::deserialize()
      */
@@ -113,6 +114,10 @@ final class Serializer implements SerializerInterface, JsonDeserializer
     {
         if (is_subclass_of($type, ItemList::class)) {
             return $this->deserializeListType($data, $type, $format, $context);
+        }
+
+        if (is_subclass_of($type, ItemMap::class)) {
+            return $this->deserializeMapType($data, $type, $format, $context);
         }
 
         if (is_subclass_of($type, ScalarValue::class)) {
@@ -166,5 +171,20 @@ final class Serializer implements SerializerInterface, JsonDeserializer
         $list = $this->serializer->deserialize($data, $arrayType, $format, $context);
 
         return $type::withList($list);
+    }
+
+    /**
+     * @param class-string<ItemMap> $type
+     *
+     * @return ItemMap
+     */
+    private function deserializeMapType(string $data, string $type, string $format = self::SERIALIZATION_JSON, ?DeserializationContext $context = null)
+    {
+        $mapType = sprintf('array<%s, %s>', $type::getKeyType(), $type::getItemType());
+
+        /** @var array<array-key, mixed> $map */
+        $map = $this->serializer->deserialize($data, $mapType, $format, $context);
+
+        return $type::withMap($map);
     }
 }

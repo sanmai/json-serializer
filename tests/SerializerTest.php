@@ -34,7 +34,10 @@ use JSONSerializer\Serializer;
 use PHPUnit\Framework\TestCase;
 use Tests\JSONSerializer\Fixtures\ItemExample;
 use Tests\JSONSerializer\Fixtures\ItemListExample;
+use Tests\JSONSerializer\Fixtures\ItemMapExample;
+use Tests\JSONSerializer\Fixtures\ScalarItemMapExample;
 use Tests\JSONSerializer\Fixtures\ScalarValueExample;
+use function array_keys;
 use function sprintf;
 
 /**
@@ -94,6 +97,43 @@ final class SerializerTest extends TestCase
         $this->assertSame(2, $itemList->items[1]->number);
     }
 
+    public function test_it_can_deserialize_map_of_items(): void
+    {
+        $itemMap = $this->serializer->deserialize('{"foo": {"itemName": "foo", "number": 1}, "bar": {"itemName": "bar", "number": 2}}', ItemMapExample::class);
+
+        $this->assertInstanceOf(ItemMapExample::class, $itemMap);
+
+        $this->assertSame(['foo', 'bar'], array_keys($itemMap->items));
+        $this->assertContainsOnlyInstancesOf(ItemExample::class, $itemMap->items);
+
+        $this->assertSame('foo', $itemMap->items['foo']->itemName);
+        $this->assertSame(1, $itemMap->items['foo']->number);
+
+        $this->assertSame('bar', $itemMap->items['bar']->itemName);
+        $this->assertSame(2, $itemMap->items['bar']->number);
+    }
+
+    public function test_it_can_deserialize_map_of_plain_values(): void
+    {
+        $itemMap = $this->serializer->deserialize('{"is_urgent": {"no": 0.1, "yes": 0.9}, "department": {"billing": 0.8, "technical": 0.2}}', ScalarItemMapExample::class);
+
+        $this->assertInstanceOf(ScalarItemMapExample::class, $itemMap);
+
+        $this->assertSame([
+            'is_urgent' => ['no' => 0.1, 'yes' => 0.9],
+            'department' => ['billing' => 0.8, 'technical' => 0.2],
+        ], $itemMap->items);
+    }
+
+    public function test_it_can_deserialize_empty_map(): void
+    {
+        $itemMap = $this->serializer->deserialize('{}', ItemMapExample::class);
+
+        $this->assertInstanceOf(ItemMapExample::class, $itemMap);
+
+        $this->assertSame([], $itemMap->items);
+    }
+
     public function test_it_passes_array_types_through_to_jms(): void
     {
         $items = $this->serializer->deserialize(
@@ -137,6 +177,14 @@ final class SerializerTest extends TestCase
         $this->assertCount(2, $itemList->items);
         $this->assertSame('foo', $itemList->items[0]->itemName);
         $this->assertSame('bar', $itemList->items[1]->itemName);
+    }
+
+    public function test_it_deserializes_json_into_a_typed_map(): void
+    {
+        $itemMap = $this->serializer->deserializeJson('{"foo": {"itemName": "foo"}}', ItemMapExample::class);
+
+        $this->assertSame(['foo'], array_keys($itemMap->items));
+        $this->assertSame('foo', $itemMap->items['foo']->itemName);
     }
 
     public function test_it_deserializes_json_into_a_typed_scalar_value(): void
