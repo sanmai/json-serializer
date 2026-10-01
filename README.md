@@ -125,7 +125,7 @@ The `ItemMap` interface declares the type of the keys and the type of the values
 ```php
 use JSONSerializer\Contracts\ItemMap;
 
-class Distributions implements ItemMap
+class ItemMapExample implements ItemMap
 {
     /** @var array<string, array<string, float>> */
     public array $items = [];
