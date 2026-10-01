@@ -142,17 +142,17 @@ class ItemMapExample implements ItemMap
 
     public static function withMap(array $map)
     {
-        $distributions = new self();
-        $distributions->items = $map;
+        $example = new self();
+        $example->items = $map;
 
-        return $distributions;
+        return $example;
     }
 }
 ```
 
 ```php
-$distributions = $serializer->deserialize($json, Distributions::class);
-$distributions->items['is_urgent']['yes']; // 0.9
+$example = $serializer->deserialize($json, ItemMapExample::class);
+$example->items['is_urgent']['yes']; // 0.9
 ```
 
 The keys of the JSON object stay as they are. An empty JSON object `{}` gives an empty map. Do not implement both `ItemList` and `ItemMap` in one class: `ItemList` takes precedence.
