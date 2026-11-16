@@ -31,8 +31,6 @@ use DIContainer\Builder;
 use Override;
 
 /**
- * Builds the serializer for sanmai/di-container.
- *
  * @api
  *
  * @implements Builder<Serializer>
