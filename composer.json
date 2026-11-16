@@ -24,7 +24,7 @@
         "php-coveralls/php-coveralls": "^2.4.1",
         "phpstan/phpstan": ">=0.10",
         "phpunit/phpunit": "^9.4 || ^10",
-        "sanmai/di-container": "^0.2.2"
+        "sanmai/di-container": "^0.1.23 || ^0.2.2"
     },
     "suggest": {
         "sanmai/di-container": "To resolve the serializer with JSONSerializer\\SerializerBuilder"
