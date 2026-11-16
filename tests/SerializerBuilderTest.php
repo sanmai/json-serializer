@@ -29,6 +29,7 @@ use DIContainer\Container;
 use JSONSerializer\Serializer;
 use JSONSerializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
+use Tests\JSONSerializer\Fixtures\ItemExample;
 
 /**
  * @covers \JSONSerializer\SerializerBuilder
@@ -37,17 +38,18 @@ use PHPUnit\Framework\TestCase;
  */
 final class SerializerBuilderTest extends TestCase
 {
-    public function test_it_builds_serializer(): void
-    {
-        $this->assertInstanceOf(Serializer::class, (new SerializerBuilder())->build());
-    }
-
-    public function test_container_uses_builder(): void
+    public function test_container_serializer_keeps_property_names(): void
     {
         $container = new Container([
             Serializer::class => SerializerBuilder::class,
         ]);
 
-        $this->assertInstanceOf(Serializer::class, $container->get(Serializer::class));
+        $item = new ItemExample();
+        $item->itemName = 'foo';
+
+        $this->assertSame(
+            '{"itemName":"foo","numbers":[]}',
+            $container->get(Serializer::class)->serialize($item)
+        );
     }
 }
