@@ -57,17 +57,6 @@ A class like `ItemExample` already declares its own fields and its own serializa
 
 The interfaces this library adds put that knowledge in the type itself, turning lists and scalars into first-class domain members. So there is no extra class and no adapter layer, and nothing about a type lives outside of it. Calling code can then ask for a domain type whatever the shape of the JSON, and the library handles the rest.
 
-## Contracts
-
-`Serializer` implements two JSON-only interfaces, `JsonSerializer` and `JsonDeserializer`. They need no format argument, and `deserializeJson()` returns the type of the given class:
-
-```php
-$json = $serializer->serializeJson($item);
-$item = $serializer->deserializeJson($json, ItemExample::class); // ItemExample
-```
-
-Use these interfaces as type declarations in place of `JMS\Serializer\SerializerInterface`.
-
 ## ItemList
 
 JMS Serializer supports deserializing arrays out of the box, but it is ever so slightly complicated since a user must specify a type in a full form, as in `array<T>`, all the while returned deserialized value will be a plain untyped array.
@@ -193,6 +182,17 @@ class ScalarValueExample implements ScalarValue
     }
 }
 ```
+
+## Contracts
+
+`Serializer` implements two JSON-only interfaces, `JsonSerializer` and `JsonDeserializer`. They need no format argument, and `deserializeJson()` returns the type of the given class:
+
+```php
+$json = $serializer->serializeJson($item);
+$item = $serializer->deserializeJson($json, ItemExample::class); // ItemExample
+```
+
+Use these interfaces as type declarations in place of `JMS\Serializer\SerializerInterface`.
 
 ## Troubleshooting
 
