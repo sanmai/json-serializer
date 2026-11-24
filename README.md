@@ -183,6 +183,17 @@ class ScalarValueExample implements ScalarValue
 }
 ```
 
+## Contracts
+
+`Serializer` implements two JSON-only interfaces, `JsonSerializer` and `JsonDeserializer`. They need no format argument, and `deserializeJson()` returns the type of the given class:
+
+```php
+$json = $serializer->serializeJson($item);
+$item = $serializer->deserializeJson($json, ItemExample::class); // ItemExample
+```
+
+Use these interfaces as type declarations in place of `JMS\Serializer\SerializerInterface`.
+
 ## Troubleshooting
 
 ### Class "JSONSerializer\Serializer" not found
