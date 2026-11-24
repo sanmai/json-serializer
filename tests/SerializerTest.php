@@ -162,6 +162,14 @@ final class SerializerTest extends TestCase
         $this->assertSame(42, $item->value);
     }
 
+    public function test_it_serializes_an_object_into_json(): void
+    {
+        $example = new ItemExample();
+        $example->itemName = 'foo';
+
+        $this->assertSame('{"itemName":"foo","numbers":[]}', $this->serializer->serializeJson($example));
+    }
+
     public function test_it_deserializes_json_into_a_typed_object(): void
     {
         $example = $this->serializer->deserializeJson('{"itemName": "foo", "number": 1}', ItemExample::class);
